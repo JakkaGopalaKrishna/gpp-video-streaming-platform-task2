@@ -14,6 +14,8 @@ export default function VideoPlayer({ src }: Props) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
+  const [volume, setVolume] = useState(1);
+  const [isMuted, setIsMuted] = useState(false);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -24,26 +26,34 @@ export default function VideoPlayer({ src }: Props) {
     if (video.canPlayType("application/vnd.apple.mpegurl")) {
       video.src = src;
     } else if (Hls.isSupported()) {
-      hls = new Hls({ enableWorker: true });
+      hls = new Hls();
       hls.loadSource(src);
       hls.attachMedia(video);
     }
+
+    video.volume = volume;
 
     const onPlay = () => setIsPlaying(true);
     const onPause = () => setIsPlaying(false);
     const onTimeUpdate = () => setCurrentTime(video.currentTime);
     const onLoadedMetadata = () => setDuration(video.duration);
+    const onVolumeChange = () => {
+      setVolume(video.volume);
+      setIsMuted(video.muted);
+    };
 
     video.addEventListener("play", onPlay);
     video.addEventListener("pause", onPause);
     video.addEventListener("timeupdate", onTimeUpdate);
     video.addEventListener("loadedmetadata", onLoadedMetadata);
+    video.addEventListener("volumechange", onVolumeChange);
 
     return () => {
       video.removeEventListener("play", onPlay);
       video.removeEventListener("pause", onPause);
       video.removeEventListener("timeupdate", onTimeUpdate);
       video.removeEventListener("loadedmetadata", onLoadedMetadata);
+      video.removeEventListener("volumechange", onVolumeChange);
       if (hls) hls.destroy();
     };
   }, [src]);
@@ -55,10 +65,22 @@ export default function VideoPlayer({ src }: Props) {
   };
 
   const handleSeek = (time: number) => {
+    if (videoRef.current) videoRef.current.currentTime = time;
+  };
+
+  const handleVolumeChange = (value: number) => {
     const video = videoRef.current;
     if (!video) return;
-    video.currentTime = time;
-    setCurrentTime(time);
+    video.volume = value;
+    video.muted = value === 0;
+    setVolume(value);
+  };
+
+  const handleMuteToggle = () => {
+    const video = videoRef.current;
+    if (!video) return;
+    video.muted = !video.muted;
+    setIsMuted(video.muted);
   };
 
   return (
@@ -73,6 +95,9 @@ export default function VideoPlayer({ src }: Props) {
             e.preventDefault();
             handlePlayPause();
           }
+          if (e.code === "KeyM") {
+            handleMuteToggle();
+          }
         }}
       />
 
@@ -80,8 +105,12 @@ export default function VideoPlayer({ src }: Props) {
         isPlaying={isPlaying}
         currentTime={currentTime}
         duration={duration}
+        volume={volume}
+        isMuted={isMuted}
         onPlayPause={handlePlayPause}
         onSeek={handleSeek}
+        onVolumeChange={handleVolumeChange}
+        onMuteToggle={handleMuteToggle}
       />
     </div>
   );

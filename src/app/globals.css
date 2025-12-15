@@ -149,3 +149,8 @@
   align-items: center;
   gap: 8px;
 }
+
+.volume-slider {
+  width: 80px;
+  cursor: pointer;
+}
