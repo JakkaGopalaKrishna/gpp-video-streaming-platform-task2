@@ -1,3 +1,4 @@
+import Link from "next/link";
 import Image from "next/image";
 import { Video } from "@/data/videos";
 
@@ -8,23 +9,23 @@ interface Props {
 
 export default function VideoCard({ video, view }: Props) {
   return (
-    <div
+    <Link
+      href={`/video/${video.id}`}
       className={`video-card ${view}`}
-      tabIndex={0}
-      aria-label={`Video ${video.title}`}
+      aria-label={`Open video ${video.title}`}
     >
       <Image
         src={video.thumbnail}
         alt={video.title}
-        width={view === "grid" ? 300 : 180}
+        width={view === "grid" ? 280 : 200}
         height={170}
         loading="lazy"
       />
-      <div>
+      <div className="video-info">
         <h3>{video.title}</h3>
         <p>{video.description}</p>
         <span>{video.duration}</span>
       </div>
-    </div>
+    </Link>
   );
 }

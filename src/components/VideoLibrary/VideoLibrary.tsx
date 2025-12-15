@@ -9,9 +9,19 @@ export default function VideoLibrary() {
 
   return (
     <section>
-      <header>
-        <button onClick={() => setView("grid")}>Grid</button>
-        <button onClick={() => setView("list")}>List</button>
+      <header className="library-header">
+        <button
+            className={view === "grid" ? "active" : ""}
+            onClick={() => setView("grid")}
+        >
+            Grid View
+        </button>
+        <button
+            className={view === "list" ? "active" : ""}
+            onClick={() => setView("list")}
+        >
+            List View
+        </button>
       </header>
 
       <div className={`library ${view}`}>

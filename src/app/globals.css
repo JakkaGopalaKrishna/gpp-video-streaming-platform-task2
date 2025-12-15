@@ -15,3 +15,81 @@
   padding: 12px;
   border-radius: 8px;
 }
+.library-header {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.library-header button {
+  padding: 6px 12px;
+  border-radius: 6px;
+  background: #222;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+.library-header button.active {
+  background: #4f46e5;
+}
+
+/* ---------- Video Card Interactions ---------- */
+.video-card {
+  text-decoration: none;
+  color: inherit;
+  background: #e3e2e2;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.video-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+}
+
+.video-card:focus-visible {
+  outline: 3px solid #4f46e5;
+}
+
+.video-info h3 {
+  margin: 8px 0 4px;
+}
+
+.video-info p {
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+/* ---------- Video Details Page ---------- */
+.video-page {
+  padding: 24px;
+  max-width: 900px;
+  margin: auto;
+}
+
+.video-page h1 {
+  font-size: 2rem;
+}
+
+.video-page .description {
+  margin-bottom: 16px;
+  opacity: 0.85;
+}
+
+/* ---------- Player Placeholder ---------- */
+.player-placeholder {
+  height: 420px;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  margin-bottom: 24px;
+  color: #888;
+}
+
+/* ---------- Comments ---------- */
+.comments {
+  border-top: 1px solid #333;
+  padding-top: 16px;
+}
