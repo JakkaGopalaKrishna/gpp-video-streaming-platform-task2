@@ -131,3 +131,21 @@
 .control-btn:focus-visible {
   outline: 3px solid #4f46e5;
 }
+.seek-bar {
+  flex: 1;
+  margin: 0 12px;
+  cursor: pointer;
+}
+
+.time {
+  font-size: 0.85rem;
+  color: #ccc;
+  min-width: 90px;
+  text-align: right;
+}
+
+.player-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
