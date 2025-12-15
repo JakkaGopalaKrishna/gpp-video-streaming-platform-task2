@@ -99,10 +99,35 @@
   background: #000;
   border-radius: 12px;
   overflow: hidden;
+  position: relative;
 }
 
 .video-element {
   width: 100%;
   height: auto;
   display: block;
+}
+
+/* ---------- Player Controls ---------- */
+.player-controls {
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+}
+
+.control-btn {
+  background: rgba(0, 0, 0, 0.6);
+  border: none;
+  color: white;
+  padding: 10px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.control-btn:hover {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+.control-btn:focus-visible {
+  outline: 3px solid #4f46e5;
 }
