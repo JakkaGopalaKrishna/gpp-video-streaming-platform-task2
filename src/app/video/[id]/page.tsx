@@ -1,6 +1,7 @@
 import { videos } from "@/data/videos";
 import { notFound } from "next/navigation";
 import VideoPlayer from "@/components/VideoPlayer/VideoPlayer";
+import PlaylistPanel from "@/components/Playlist/PlaylistPanel";
 
 interface Props {
     params: Promise<{ id: string }>;
@@ -24,6 +25,8 @@ export default async function VideoPage({ params }: Props) {
         <h2>Comments</h2>
         <p>No comments yet (mock).</p>
       </section>
+      <PlaylistPanel videoId={video.id} />
+
     </main>
   );
 }

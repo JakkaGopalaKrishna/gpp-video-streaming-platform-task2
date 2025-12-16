@@ -62,7 +62,26 @@ export default function VideoPlayer({ src }: Props) {
 
     const onPlay = () => setIsPlaying(true);
     const onPause = () => setIsPlaying(false);
-    const onTimeUpdate = () => setCurrentTime(video.currentTime);
+    const onTimeUpdate = () => {
+      setCurrentTime(video.currentTime);
+    
+      localStorage.setItem(
+        "continueWatching",
+        JSON.stringify({
+          videoId: src,
+          time: video.currentTime,
+        })
+      );
+    };
+    
+    const saved = localStorage.getItem("continueWatching");
+    if (saved) {
+      const data = JSON.parse(saved);
+      if (data.videoId === src) {
+        video.currentTime = data.time;
+      }
+    }
+
     const onLoadedMetadata = () => setDuration(video.duration);
     const onVolumeChange = () => setVolume(video.volume);
     // const onTimeUpdate = () => setCurrentTime(video.currentTime);
