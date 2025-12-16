@@ -54,10 +54,15 @@ export default function PlayerControls({
   onTogglePiP
 }: Props) {
   return (
-    <div className="player-controls">
+    <div className="player-controls"  role="group"
+    aria-label="Video player controls">
     {/* Left controls */}
+    <span className="sr-only" aria-live="polite">
+      {isPlaying ? "Video playing" : "Video paused"}
+    </span>
+
     <div className="controls-left">
-      <button onClick={onPlayPause} className="control-btn">
+      <button onClick={onPlayPause} className="control-btn" aria-label={isPlaying ? "Pause video" : "Play video"} >
         {isPlaying ? <IconPlayerPause size={22} /> : <IconPlayerPlay size={22} />}
       </button>
   
@@ -73,6 +78,7 @@ export default function PlayerControls({
         value={currentTime}
         onChange={(e) => onSeek(Number(e.target.value))}
         className="seek-bar"
+        aria-label="Seek video"
       />
     </div>
   
@@ -80,7 +86,7 @@ export default function PlayerControls({
     <div className="controls-right">
       <span className="time">{formatTime(duration)}</span>
   
-      <button onClick={onMuteToggle} className="control-btn">
+      <button onClick={onMuteToggle} className="control-btn" aria-label={isPlaying ? "mute" : "Unmute"}>
         {isMuted ? <IconVolumeOff size={20} /> : <IconVolume size={20} />}
       </button>
   
@@ -92,6 +98,7 @@ export default function PlayerControls({
         value={volume}
         onChange={(e) => onVolumeChange(Number(e.target.value))}
         className="volume-slider"
+        aria-label="Volume"
       />
   
       <select
@@ -117,11 +124,11 @@ export default function PlayerControls({
         <option value="720p">720p</option>
       </select>
   
-      <button onClick={onTogglePiP} className="control-btn">
+      <button onClick={onTogglePiP} className="control-btn" aria-label={isPlaying ? "unPiP" : "PiP"}>
         {isPiP ? <IconPictureInPictureOff size={20} /> : <IconPictureInPicture size={20} />}
       </button>
   
-      <button onClick={onToggleFullscreen} className="control-btn">
+      <button onClick={onToggleFullscreen} className="control-btn" aria-label={isPlaying ? "Fullscreen exit" : "Fullscreen"}>
         {isFullscreen ? <IconMinimize size={20} /> : <IconMaximize size={20} />}
       </button>
     </div>

@@ -91,21 +91,7 @@ export default function VideoPlayer({ src }: Props) {
     //   setIsMuted(video.muted);
     // };
 
-    const playPause = () => {
-      const v = videoRef.current;
-      if (!v) return;
-      v.paused ? v.play() : v.pause();
-    };
-    const changeVolume = (v: number) => {
-      if (!videoRef.current) return;
-      videoRef.current.volume = v;
-      setVolume(v);
-    };
-    const handlePlaybackRateChange = (rate: number) => {
-      if (!videoRef.current) return;
-      videoRef.current.playbackRate = rate;
-      setPlaybackRate(rate);
-    };
+
     
     
     video.addEventListener("play", onPlay);
@@ -123,6 +109,8 @@ export default function VideoPlayer({ src }: Props) {
     const onLeavePiP = () => setIsPiP(false);
     videoRef.current?.addEventListener("enterpictureinpicture", onEnterPiP);
     videoRef.current?.addEventListener("leavepictureinpicture", onLeavePiP);
+
+    videoRef.current?.focus();
 
     return () => {
       video.removeEventListener("play", onPlay);
@@ -156,6 +144,16 @@ export default function VideoPlayer({ src }: Props) {
       hls.currentLevel = levelIndex;
       setQuality(q);
     }
+  };
+  const playPause = () => {
+    const v = videoRef.current;
+    if (!v) return;
+    v.paused ? v.play() : v.pause();
+  };
+  const changeVolume = (v: number) => {
+    if (!videoRef.current) return;
+    videoRef.current.volume = v;
+    setVolume(v);
   };
 
   const handlePlayPause = () => {
@@ -226,14 +224,34 @@ export default function VideoPlayer({ src }: Props) {
         preload="metadata"
         tabIndex={0}
         onKeyDown={(e) => {
-          if (e.code === "Space") {
-            e.preventDefault();
-            handlePlayPause();
-          }
-          if (e.code === "KeyM") {
-            handleMuteToggle();
+          switch (e.key) {
+            case " ":
+              e.preventDefault();
+              playPause();
+              break;
+            case "ArrowRight":
+              handleSeek(currentTime + 5);
+              break;
+            case "ArrowLeft":
+              handleSeek(currentTime - 5);
+              break;
+            case "ArrowUp":
+              changeVolume(Math.min(volume + 0.1, 1));
+              break;
+            case "ArrowDown":
+              changeVolume(Math.max(volume - 0.1, 0));
+              break;
+            case "m":
+            case "M":
+              handleMuteToggle();
+              break;
+            case "f":
+            case "F":
+              toggleFullscreen();
+              break;
           }
         }}
+
       />
 
       <PlayerControls
