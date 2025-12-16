@@ -1,13 +1,14 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Video } from "@/data/videos";
+import React from "react";
 
 interface Props {
   video: Video;
   view: "grid" | "list";
 }
 
-export default function VideoCard({ video, view }: Props) {
+function VideoCard({ video, view }: Props) {
   return (
     <Link
       href={`/video/${video.id}`}
@@ -20,6 +21,7 @@ export default function VideoCard({ video, view }: Props) {
         width={view === "grid" ? 280 : 200}
         height={170}
         loading="lazy"
+        sizes="(max-width: 768px) 100vw, 33vw"
       />
       <div className="video-info">
         <h3>{video.title}</h3>
@@ -29,3 +31,5 @@ export default function VideoCard({ video, view }: Props) {
     </Link>
   );
 }
+
+export default React.memo(VideoCard);

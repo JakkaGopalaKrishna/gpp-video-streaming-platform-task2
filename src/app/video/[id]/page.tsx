@@ -1,6 +1,6 @@
 import { videos } from "@/data/videos";
 import { notFound } from "next/navigation";
-import VideoPlayer from "@/components/VideoPlayer/VideoPlayer";
+import VideoPlayer from "@/components/VideoPlayer/VideoPlayerClient";
 import PlaylistPanel from "@/components/Playlist/PlaylistPanel";
 
 interface Props {

@@ -1,4 +1,5 @@
 "use client";
+import React from "react";
 
 import {
   IconPlayerPlay,
@@ -34,7 +35,7 @@ interface Props {
   
 }
 
-export default function PlayerControls({
+function PlayerControls({
   isPlaying,
   currentTime,
   duration,
@@ -142,3 +143,5 @@ function formatTime(seconds: number) {
   const secs = Math.floor(seconds % 60);
   return `${mins}:${secs.toString().padStart(2, "0")}`;
 }
+
+export default React.memo(PlayerControls);
