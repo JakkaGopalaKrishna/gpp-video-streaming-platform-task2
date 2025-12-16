@@ -13,6 +13,10 @@ interface Props {
   duration: number;
   volume: number;
   isMuted: boolean;
+
+  quality: string;
+  onQualityChange: (quality: string) => void;
+
   onPlayPause: () => void;
   onSeek: (time: number) => void;
   onVolumeChange: (value: number) => void;
@@ -25,6 +29,8 @@ export default function PlayerControls({
   duration,
   volume,
   isMuted,
+  quality,
+  onQualityChange,
   onPlayPause,
   onSeek,
   onVolumeChange,
@@ -71,6 +77,19 @@ export default function PlayerControls({
         className="volume-slider"
         aria-label="Volume"
       />
+      <label htmlFor="quality" className="quality-label">
+        Quality:
+      </label>
+      <select
+        id="quality"
+        value={quality}
+        onChange={(e) => onQualityChange(e.target.value)}
+        className="quality-select"
+      >
+        <option value="360p">360p</option>
+        <option value="480p">480p</option>
+        <option value="720p">720p</option>
+      </select>
     </div>
   );
 }
