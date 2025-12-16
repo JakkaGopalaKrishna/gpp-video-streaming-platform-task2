@@ -17,6 +17,9 @@ export default function VideoPlayer({ src }: Props) {
   const [duration, setDuration] = useState(0);
   const [volume, setVolume] = useState(1);
   const [isMuted, setIsMuted] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [playbackRate, setPlaybackRate] = useState(1);
+  const [isPiP, setIsPiP] = useState(false);
 
   // ✅ Quality state (default 360p)
   const [quality, setQuality] = useState("360p");
@@ -53,11 +56,22 @@ export default function VideoPlayer({ src }: Props) {
       setIsMuted(video.muted);
     };
 
+    
     video.addEventListener("play", onPlay);
     video.addEventListener("pause", onPause);
     video.addEventListener("timeupdate", onTimeUpdate);
     video.addEventListener("loadedmetadata", onLoadedMetadata);
     video.addEventListener("volumechange", onVolumeChange);
+
+    const onFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement);
+    };
+    document.addEventListener("fullscreenchange", onFullscreenChange);
+
+    const onEnterPiP = () => setIsPiP(true);
+    const onLeavePiP = () => setIsPiP(false);
+    videoRef.current?.addEventListener("enterpictureinpicture", onEnterPiP);
+    videoRef.current?.addEventListener("leavepictureinpicture", onLeavePiP);
 
     return () => {
       video.removeEventListener("play", onPlay);
@@ -65,6 +79,9 @@ export default function VideoPlayer({ src }: Props) {
       video.removeEventListener("timeupdate", onTimeUpdate);
       video.removeEventListener("loadedmetadata", onLoadedMetadata);
       video.removeEventListener("volumechange", onVolumeChange);
+      document.removeEventListener("fullscreenchange", onFullscreenChange);
+      videoRef.current?.removeEventListener("enterpictureinpicture", onEnterPiP);
+      videoRef.current?.removeEventListener("leavepictureinpicture", onLeavePiP);
       if (hls) hls.destroy();
     };
   }, [src]);
@@ -115,6 +132,41 @@ export default function VideoPlayer({ src }: Props) {
     setIsMuted(video.muted);
   };
 
+  const toggleFullscreen = () => {
+    const player = videoRef.current?.parentElement;
+    if (!player) return;
+  
+    if (!document.fullscreenElement) {
+      player.requestFullscreen();
+      setIsFullscreen(true);
+    } else {
+      document.exitFullscreen();
+      setIsFullscreen(false);
+    }
+  };
+
+  const handlePlaybackRateChange = (rate: number) => {
+    if (!videoRef.current) return;
+    videoRef.current.playbackRate = rate;
+    setPlaybackRate(rate);
+  };
+  const togglePiP = async () => {
+    const video = videoRef.current;
+    if (!video) return;
+  
+    try {
+      if (!document.pictureInPictureElement) {
+        await video.requestPictureInPicture();
+        setIsPiP(true);
+      } else {
+        await document.exitPictureInPicture();
+        setIsPiP(false);
+      }
+    } catch (err) {
+      console.warn("PiP not supported", err);
+    }
+  };
+
   return (
     <div className="video-player">
       <video
@@ -145,6 +197,12 @@ export default function VideoPlayer({ src }: Props) {
         onSeek={handleSeek}
         onVolumeChange={handleVolumeChange}
         onMuteToggle={handleMuteToggle}
+        isFullscreen={isFullscreen}
+        onToggleFullscreen={toggleFullscreen}
+        playbackRate={playbackRate}
+        onPlaybackRateChange={handlePlaybackRateChange}
+        isPiP={isPiP}
+        onTogglePiP={togglePiP}
       />
     </div>
   );
