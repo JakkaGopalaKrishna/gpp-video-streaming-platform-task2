@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Hls from "hls.js";
 import PlayerControls from "@/components/PlayerControls/PlayerControls";
+import { usePlayerStore } from "@/store/playerStore";
 
 interface Props {
   src: string;
@@ -12,15 +13,27 @@ export default function VideoPlayer({ src }: Props) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const hlsRef = useRef<Hls | null>(null);
 
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [currentTime, setCurrentTime] = useState(0);
-  const [duration, setDuration] = useState(0);
-  const [volume, setVolume] = useState(1);
+  // const [isPlaying, setIsPlaying] = useState(false);
+  // const [currentTime, setCurrentTime] = useState(0);
+  // const [duration, setDuration] = useState(0);
+  // const [volume, setVolume] = useState(1);
   const [isMuted, setIsMuted] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
-  const [playbackRate, setPlaybackRate] = useState(1);
+  // const [playbackRate, setPlaybackRate] = useState(1);
   const [isPiP, setIsPiP] = useState(false);
-
+  const {
+    isPlaying,
+    currentTime,
+    duration,
+    volume,
+    playbackRate,
+    setIsPlaying,
+    setCurrentTime,
+    setDuration,
+    setVolume,
+    setPlaybackRate,
+  } = usePlayerStore();
+  
   // ✅ Quality state (default 360p)
   const [quality, setQuality] = useState("360p");
 
@@ -51,11 +64,30 @@ export default function VideoPlayer({ src }: Props) {
     const onPause = () => setIsPlaying(false);
     const onTimeUpdate = () => setCurrentTime(video.currentTime);
     const onLoadedMetadata = () => setDuration(video.duration);
-    const onVolumeChange = () => {
-      setVolume(video.volume);
-      setIsMuted(video.muted);
-    };
+    const onVolumeChange = () => setVolume(video.volume);
+    // const onTimeUpdate = () => setCurrentTime(video.currentTime);
+    // const onLoadedMetadata = () => setDuration(video.duration);
+    // const onVolumeChange = () => {
+    //   setVolume(video.volume);
+    //   setIsMuted(video.muted);
+    // };
 
+    const playPause = () => {
+      const v = videoRef.current;
+      if (!v) return;
+      v.paused ? v.play() : v.pause();
+    };
+    const changeVolume = (v: number) => {
+      if (!videoRef.current) return;
+      videoRef.current.volume = v;
+      setVolume(v);
+    };
+    const handlePlaybackRateChange = (rate: number) => {
+      if (!videoRef.current) return;
+      videoRef.current.playbackRate = rate;
+      setPlaybackRate(rate);
+    };
+    
     
     video.addEventListener("play", onPlay);
     video.addEventListener("pause", onPause);
