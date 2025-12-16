@@ -10,12 +10,16 @@ interface Props {
 
 export default function VideoPlayer({ src }: Props) {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const hlsRef = useRef<Hls | null>(null);
 
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [volume, setVolume] = useState(1);
   const [isMuted, setIsMuted] = useState(false);
+
+  // ✅ Quality state (default 360p)
+  const [quality, setQuality] = useState("360p");
 
   useEffect(() => {
     const video = videoRef.current;
@@ -27,8 +31,15 @@ export default function VideoPlayer({ src }: Props) {
       video.src = src;
     } else if (Hls.isSupported()) {
       hls = new Hls();
+      hlsRef.current = hls;
+
       hls.loadSource(src);
       hls.attachMedia(video);
+
+      // Set default quality once manifest is loaded
+      hls.on(Hls.Events.MANIFEST_PARSED, () => {
+        setHlsQuality("360p");
+      });
     }
 
     video.volume = volume;
@@ -57,6 +68,27 @@ export default function VideoPlayer({ src }: Props) {
       if (hls) hls.destroy();
     };
   }, [src]);
+
+  // ✅ Map dropdown → HLS level
+  const setHlsQuality = (q: string) => {
+    const hls = hlsRef.current;
+    if (!hls) return;
+
+    const heightMap: Record<string, number> = {
+      "360p": 360,
+      "480p": 480,
+      "720p": 720,
+    };
+
+    const levelIndex = hls.levels.findIndex(
+      (level) => level.height === heightMap[q]
+    );
+
+    if (levelIndex !== -1) {
+      hls.currentLevel = levelIndex;
+      setQuality(q);
+    }
+  };
 
   const handlePlayPause = () => {
     const video = videoRef.current;
@@ -107,6 +139,8 @@ export default function VideoPlayer({ src }: Props) {
         duration={duration}
         volume={volume}
         isMuted={isMuted}
+        quality={quality}
+        onQualityChange={setHlsQuality}
         onPlayPause={handlePlayPause}
         onSeek={handleSeek}
         onVolumeChange={handleVolumeChange}
