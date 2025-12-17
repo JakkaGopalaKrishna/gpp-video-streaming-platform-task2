@@ -111,6 +111,32 @@ export default function VideoPlayer({ src }: Props) {
     videoRef.current?.addEventListener("leavepictureinpicture", onLeavePiP);
 
     videoRef.current?.focus();
+      // PHASE 6 – Watch History
+const history = JSON.parse(
+  localStorage.getItem("watchHistory") || "[]"
+);
+
+const existingIndex = history.findIndex(
+  (item: any) => item.videoId === src
+);
+
+const record = {
+  videoId: src,
+  time: video.currentTime,
+  updatedAt: Date.now(),
+};
+
+if (existingIndex >= 0) {
+  history[existingIndex] = record;
+} else {
+  history.unshift(record);
+}
+
+localStorage.setItem(
+  "watchHistory",
+  JSON.stringify(history.slice(0, 10)) // last 10 videos
+);
+
 
     return () => {
       video.removeEventListener("play", onPlay);
