@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test": "jest",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.15",
@@ -19,6 +21,7 @@
     "zustand": "^5.0.9"
   },
   "devDependencies": {
+    "@playwright/test": "^1.57.0",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.0",
     "@types/node": "^20",
@@ -27,6 +30,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.0.10",
     "jest": "^30.2.0",
+    "jest-environment-jsdom": "^30.2.0",
     "playwright": "^1.57.0",
     "typescript": "^5"
   }
