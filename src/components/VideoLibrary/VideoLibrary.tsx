@@ -24,7 +24,7 @@ export default function VideoLibrary() {
         </button>
       </header>
 
-      <div className={`library ${view}`}>
+      <div className={`library ${view}  video-grid`}>
         {videos.map((video) => (
           <VideoCard key={video.id} video={video} view={view} />
         ))}

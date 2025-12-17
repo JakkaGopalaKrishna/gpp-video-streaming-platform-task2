@@ -23,7 +23,7 @@ function VideoCard({ video, view }: Props) {
         loading="lazy"
         sizes="(max-width: 768px) 100vw, 33vw"
       />
-      <div className="video-info">
+      <div className="video-info info">
         <h3>{video.title}</h3>
         <p>{video.description}</p>
         <span>{video.duration}</span>
